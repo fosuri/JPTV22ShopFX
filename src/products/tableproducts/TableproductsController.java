@@ -22,8 +22,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javax.persistence.EntityManager;
 import jptv22shopfx.HomeController;
+import jptv22shopfx.JPTV22ShopFX;
+import products.addquantity.AddquantityController;
 import products.product.ProductController;
 //import tools.ShoppingCart;
 
@@ -37,6 +40,8 @@ public class TableproductsController implements Initializable {
     @FXML private TableView tvProductsRoot;
     private HomeController homeController;
 //    private ShoppingCart cart = new ShoppingCart();
+    
+    private JPTV22ShopFX app;
     
     @FXML
     private TableView<Product> tvProductsRoot1;
@@ -88,33 +93,85 @@ public class TableproductsController implements Initializable {
         TableColumn<Product, String> quantityProductCol = new TableColumn<>("Quantity");
         quantityProductCol.setCellValueFactory(cellData -> cellData.getValue().quantityProperty());
 
-        TableColumn<Product, Image> coverProductCol = new TableColumn<>("Обложка");
+        TableColumn<Product, Image> coverProductCol = new TableColumn<>("Photo");
         coverProductCol.setCellValueFactory(cellData -> {
             Image coverImage = new Image(cellData.getValue().getCoverAsStream());
             return new SimpleObjectProperty<>(coverImage);
         });   
         coverProductCol.setCellFactory(param -> new ImageViewTableCell<>());
         tvProductsRoot.getColumns().addAll(idProductCol,nameProductCol,coverProductCol, priceProductCol, quantityProductCol);
-        tvProductsRoot.setRowFactory(tv ->{
-            TableRow<Product> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if(event.getClickCount() == 2 && (!row.isEmpty())){
-                    Product product = row.getItem();
-                    System.out.println("Выбран продукт с ID: " + product.getId());
-                    
-                    ProductController productController = new ProductController();
-                    productController.setHomeController(homeController);
-                    productController.showProduct(product);
-                    
-//                    cart.addItem(product);
-//                    cart.displayItems();
-//                    System.out.println(cart.getTotal());
-//                    System.out.println(cart.getProductCounts());
-                    
+//        tvProductsRoot.setRowFactory(tv ->{
+//            TableRow<Product> row = new TableRow<>();
+//            row.setOnMouseClicked(event -> {
+//                
+//                    if (event.getClickCount() == 2 && (!row.isEmpty())){
+//                    Product product = row.getItem();
+//                    System.out.println("Выбран продукт с ID: " + product.getId());
+//                    
+//                    
+//                    if(JPTV22ShopFX.currentUser == null){
+//                      homeController.clickMenuLogin();
+//                      return;
+//                   }
+//                   if(!JPTV22ShopFX.currentUser.getRoles().contains(JPTV22ShopFX.roles.MANAGER.toString())){
+//                       homeController.clickMenuLogin("Вы должны иметь роль "+JPTV22ShopFX.roles.MANAGER.toString());
+//                       return;
+//                   }
+//                    
+//                    AddquantityController addquantityController = new AddquantityController();
+//                    addquantityController.setHomeController(homeController);
+//                    addquantityController.showAdd(product);
+//                    
+//                }else if(event.getClickCount() == 3 && (!row.isEmpty())){
+//                    Product product = row.getItem();
+//                    System.out.println("Выбран продукт с ID: " + product.getId());
+//                    
+//                    ProductController productController = new ProductController();
+//                    productController.setHomeController(homeController);
+//                    productController.showProduct(product);
+//                    
+//                }
+//            
+//
+//            });
+//            return row;
+//        });
+
+tvProductsRoot.setRowFactory(tv ->{
+    TableRow<Product> row = new TableRow<>();
+    row.setOnMouseClicked(event -> {
+        if (event.getClickCount() == 2 && !row.isEmpty()) {
+            Product product = row.getItem();
+            System.out.println("Выбран продукт с ID: " + product.getId());
+            
+
+            
+            if (event.getButton() == MouseButton.SECONDARY) {
+
+                if (JPTV22ShopFX.currentUser == null) {
+                    homeController.clickMenuLogin();
+                    return;
                 }
-            });
-            return row;
-        });
+                if (!JPTV22ShopFX.currentUser.getRoles().contains(JPTV22ShopFX.roles.MANAGER.toString())) {
+                    homeController.clickMenuLogin("Вы должны иметь роль " + JPTV22ShopFX.roles.MANAGER.toString());
+                    return;
+                }                
+                
+                AddquantityController addquantityController = new AddquantityController();
+                addquantityController.setHomeController(homeController);
+                addquantityController.showAdd(product);
+                
+            } else if (event.getButton() == MouseButton.PRIMARY) {
+                ProductController productController = new ProductController();
+                productController.setHomeController(homeController);
+                productController.showProduct(product);
+            }
+        } 
+    });
+    return row;
+});
+
+
     }
     
     public void setHomeController(HomeController homeController) {

@@ -26,12 +26,95 @@ public class Product implements Serializable{
     private String name;
     private double price;
     private int quantity;
+    private int productRating;
     @Lob
     private byte[] cover;
 
     public Product() {
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 97 * hash + Objects.hashCode(this.id);
+        hash = 97 * hash + Objects.hashCode(this.name);
+        hash = 97 * hash + (int) (Double.doubleToLongBits(this.price) ^ (Double.doubleToLongBits(this.price) >>> 32));
+        hash = 97 * hash + this.quantity;
+        hash = 97 * hash + this.productRating;
+        hash = 97 * hash + Arrays.hashCode(this.cover);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Product other = (Product) obj;
+        if (Double.doubleToLongBits(this.price) != Double.doubleToLongBits(other.price)) {
+            return false;
+        }
+        if (this.quantity != other.quantity) {
+            return false;
+        }
+        if (this.productRating != other.productRating) {
+            return false;
+        }
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Arrays.equals(this.cover, other.cover)) {
+            return false;
+        }
+        return true;
+    }
     
+    
+
+    
+    public InputStream getCoverAsStream(){
+        return new ByteArrayInputStream(this.cover);
+    }    
+
+    public StringProperty idProperty(){
+        return new SimpleStringProperty(String.valueOf(id));
+    }
+    
+    public StringProperty nameProperty() {
+        return new SimpleStringProperty(name);
+    }   
+    
+    public StringProperty quantityProperty() {
+        return new SimpleStringProperty(String.valueOf(quantity));
+    }
+    
+    public StringProperty priceProperty() {
+        return new SimpleStringProperty(String.valueOf(price));
+    }
+    
+    public StringProperty ratingProperty() {
+        return new SimpleStringProperty(String.valueOf(productRating));
+    }
+    
+    
+    // Уменьшаем количество продукта
+    public void decreaseQuantity(int amount) {
+        if (quantity >= amount) {
+            quantity -= amount;
+        } else {
+            // Если запрошенное количество больше, чем доступное, можно сделать что-то еще, например, выкинуть ошибку
+            throw new IllegalArgumentException("Requested quantity exceeds available quantity");
+        }
+    }    
 
     public Long getId() {
         return id;
@@ -65,6 +148,14 @@ public class Product implements Serializable{
         this.quantity = quantity;
     }
 
+    public int getProductRating() {
+        return productRating;
+    }
+
+    public void setProductRating(int productRating) {
+        this.productRating = productRating;
+    }
+
     public byte[] getCover() {
         return cover;
     }
@@ -73,76 +164,6 @@ public class Product implements Serializable{
         this.cover = cover;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 97 * hash + Objects.hashCode(this.id);
-        hash = 97 * hash + Objects.hashCode(this.name);
-        hash = 97 * hash + (int) (Double.doubleToLongBits(this.price) ^ (Double.doubleToLongBits(this.price) >>> 32));
-        hash = 97 * hash + this.quantity;
-        hash = 97 * hash + Arrays.hashCode(this.cover);
-        return hash;
-    }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Product other = (Product) obj;
-        if (Double.doubleToLongBits(this.price) != Double.doubleToLongBits(other.price)) {
-            return false;
-        }
-        if (this.quantity != other.quantity) {
-            return false;
-        }
-        if (!Objects.equals(this.name, other.name)) {
-            return false;
-        }
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        if (!Arrays.equals(this.cover, other.cover)) {
-            return false;
-        }
-        return true;
-    }
-    
-    public InputStream getCoverAsStream(){
-        return new ByteArrayInputStream(this.cover);
-    }    
-
-    public StringProperty idProperty(){
-        return new SimpleStringProperty(String.valueOf(id));
-    }
-    
-    public StringProperty nameProperty() {
-        return new SimpleStringProperty(name);
-    }   
-    
-    public StringProperty quantityProperty() {
-        return new SimpleStringProperty(String.valueOf(quantity));
-    }
-    
-    public StringProperty priceProperty() {
-        return new SimpleStringProperty(String.valueOf(price));
-    }
-    
-    
-    // Уменьшаем количество продукта
-    public void decreaseQuantity(int amount) {
-        if (quantity >= amount) {
-            quantity -= amount;
-        } else {
-            // Если запрошенное количество больше, чем доступное, можно сделать что-то еще, например, выкинуть ошибку
-            throw new IllegalArgumentException("Requested quantity exceeds available quantity");
-        }
-    }    
 
 }

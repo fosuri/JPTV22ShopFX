@@ -34,15 +34,6 @@ public class User implements Serializable{
         roles = new ArrayList<>();
     }
 
-    public User(Long id, String firstname, String lastname, String login, String password, double balance) {
-        this.id = id;
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.login = login;
-        this.password = password;
-        this.balance = balance;
-    }
-
     public Long getId() {
         return id;
     }
@@ -91,8 +82,6 @@ public class User implements Serializable{
         this.balance = balance;
     }
 
-
-
     public List<String> getRoles() {
         return roles;
     }
@@ -104,14 +93,13 @@ public class User implements Serializable{
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 19 * hash + Objects.hashCode(this.id);
-        hash = 19 * hash + Objects.hashCode(this.firstname);
-        hash = 19 * hash + Objects.hashCode(this.lastname);
-        hash = 19 * hash + Objects.hashCode(this.login);
-        hash = 19 * hash + Objects.hashCode(this.password);
-        hash = 19 * hash + (int) (Double.doubleToLongBits(this.balance) ^ (Double.doubleToLongBits(this.balance) >>> 32));
-
-        hash = 19 * hash + Objects.hashCode(this.roles);
+        hash = 61 * hash + Objects.hashCode(this.id);
+        hash = 61 * hash + Objects.hashCode(this.firstname);
+        hash = 61 * hash + Objects.hashCode(this.lastname);
+        hash = 61 * hash + Objects.hashCode(this.login);
+        hash = 61 * hash + Objects.hashCode(this.password);
+        hash = 61 * hash + (int) (Double.doubleToLongBits(this.balance) ^ (Double.doubleToLongBits(this.balance) >>> 32));
+        hash = 61 * hash + Objects.hashCode(this.roles);
         return hash;
     }
 
@@ -145,12 +133,12 @@ public class User implements Serializable{
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
-
         if (!Objects.equals(this.roles, other.roles)) {
             return false;
         }
         return true;
     }
+
 
 
     

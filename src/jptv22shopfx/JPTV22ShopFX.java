@@ -80,6 +80,7 @@ public class JPTV22ShopFX extends Application {
             user.setFirstname("Nikita");
             user.setLastname("Karpov");
             user.setLogin("admin");
+            user.setBalance(0);
             PassEncrypt pe = new PassEncrypt();
             user.setPassword(pe.getEncryptPassword("12345",pe.getSalt()));
             user.getRoles().add(jptv22shopfx.JPTV22ShopFX.roles.ADMINISTRATOR.toString());
